@@ -1,4 +1,8 @@
+# shell ignores
 .direnv
+.devenv
+
+# project ignores
 .godot
 /result
 target/
