@@ -39,10 +39,9 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3vyb7"]
-radius = 7.8116
-height = 28.6707
 
 [node name="Player" type="PlayerController"]
+z_index = 1
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
@@ -51,6 +50,6 @@ animation = &"idle"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -8)
-scale = Vector2(0.640074, -0.558061)
+position = Vector2(0, -9)
+scale = Vector2(0.6, 0.6)
 shape = SubResource("CapsuleShape2D_3vyb7")

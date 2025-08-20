@@ -1,5 +1,6 @@
 use godot::prelude::*;
 
+mod pickup_component;
 mod player_controller;
 
 pub mod prelude {

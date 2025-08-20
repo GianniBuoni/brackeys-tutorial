@@ -7,17 +7,13 @@ use godot::{
 use crate::prelude::*;
 
 #[derive(GodotClass)]
-#[class(base=CharacterBody2D)]
+#[class(init, base=CharacterBody2D)]
 pub struct PlayerController {
     base: Base<CharacterBody2D>,
 }
 
 #[godot_api]
 impl ICharacterBody2D for PlayerController {
-    fn init(base: Base<CharacterBody2D>) -> Self {
-        Self { base }
-    }
-
     fn physics_process(&mut self, delta: f32) {
         let mut base = self.base_mut();
         let mut velocity = base.get_velocity();
