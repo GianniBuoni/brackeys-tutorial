@@ -6,7 +6,7 @@ use godot::{
 #[derive(GodotClass)]
 #[class(init, base=Area2D)]
 pub struct KillPlane {
-    #[init(node = "ResetTimer")]
+    #[init(node = "Timer")]
     reset_timer: OnReady<Gd<Timer>>,
     base: Base<Area2D>,
 }

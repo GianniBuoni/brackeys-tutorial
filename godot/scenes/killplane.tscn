@@ -2,5 +2,5 @@
 
 [node name="Killplane" type="KillPlane"]
 
-[node name="ResetTimer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="."]
 wait_time = 0.6
