@@ -2,7 +2,10 @@
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_celpr"]
 
-[node name="Killplane" type="Area2D"]
+[node name="Killplane" type="KillPlane"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("WorldBoundaryShape2D_celpr")
+
+[node name="ResetTimer" type="Timer" parent="."]
+wait_time = 0.6

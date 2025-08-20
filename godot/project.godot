@@ -13,10 +13,6 @@ config_version=5
 run/main_scene="uid://1luetwjpkq1j"
 config/features=PackedStringArray("4.4")
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/ldtk-importer/plugin.cfg")
-
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

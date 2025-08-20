@@ -1,5 +1,6 @@
 use godot::prelude::*;
 
+mod killplane;
 mod pickup_component;
 mod player_controller;
 
