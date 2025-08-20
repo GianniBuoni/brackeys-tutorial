@@ -1,11 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4n0v7e4r5ugy"]
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_celpr"]
+[gd_scene format=3 uid="uid://c4n0v7e4r5ugy"]
 
 [node name="Killplane" type="KillPlane"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("WorldBoundaryShape2D_celpr")
 
 [node name="ResetTimer" type="Timer" parent="."]
 wait_time = 0.6

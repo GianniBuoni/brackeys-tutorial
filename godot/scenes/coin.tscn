@@ -98,6 +98,7 @@ animations = [{
 radius = 5.09902
 
 [node name="Coin" type="Coin"]
+collision_mask = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ls27i")
