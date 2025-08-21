@@ -13,6 +13,10 @@ config_version=5
 run/main_scene="uid://1luetwjpkq1j"
 config/features=PackedStringArray("4.4")
 
+[autoload]
+
+BgMusic="*res://scenes/bg_music.tscn"
+
 [display]
 
 window/stretch/mode="viewport"

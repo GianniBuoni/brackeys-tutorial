@@ -1,11 +1,13 @@
 use godot::{
-    classes::{Area2D, IArea2D},
+    classes::{AnimationPlayer, Area2D, IArea2D},
     prelude::*,
 };
 
 #[derive(GodotClass)]
 #[class(init, base=Area2D)]
 pub struct Coin {
+    #[init(node = "AnimationPlayer")]
+    animation_player: OnReady<Gd<AnimationPlayer>>,
     base: Base<Area2D>,
 }
 
@@ -24,6 +26,6 @@ impl Coin {
     #[func]
     fn add_coin(&mut self, _body: Gd<Node2D>) {
         godot_print!("Coin +1");
-        self.base_mut().queue_free();
+        self.animation_player.play_ex().name("pickup").done();
     }
 }
