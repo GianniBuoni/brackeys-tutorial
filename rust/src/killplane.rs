@@ -3,9 +3,13 @@ use godot::{
     prelude::*,
 };
 
+use crate::prelude::*;
+
 #[derive(GodotClass)]
 #[class(init, base=Area2D)]
 pub struct KillPlane {
+    #[init(val = OnReady::from_loaded(SCORE_RESOURCE))]
+    score_resource: OnReady<Gd<Resource>>,
     #[init(node = "Timer")]
     reset_timer: OnReady<Gd<Timer>>,
     base: Base<Area2D>,
@@ -43,6 +47,7 @@ impl KillPlane {
     fn reload_game(&mut self) {
         if let Some(mut scene) = self.reset_timer.get_tree() {
             scene.reload_current_scene();
+            self.score_resource.set("score", &Variant::from(0));
             Engine::singleton().set_time_scale(1.);
         }
     }

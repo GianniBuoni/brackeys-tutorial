@@ -1,6 +1,8 @@
-[gd_scene load_steps=13 format=4 uid="uid://1luetwjpkq1j"]
+[gd_scene load_steps=16 format=4 uid="uid://1luetwjpkq1j"]
 
+[ext_resource type="ScoreResource" uid="uid://busmseh6t7cbk" path="res://resources/score_resource.tres" id="1_gee14"]
 [ext_resource type="TileSet" uid="uid://j4ubvjqv4yt8" path="res://scenes/tilemap.tres" id="1_iywne"]
+[ext_resource type="FontFile" uid="uid://w824j5acijhb" path="res://assets/fonts/PixelOperator8.ttf" id="1_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://df0blvp7a5pdj" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://1nctnweq65un" path="res://scenes/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cdxu3mj2fcoit" path="res://scenes/enemy.tscn" id="3_p57ef"]
@@ -69,6 +71,8 @@ _data = {
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_iywne"]
 
+[sub_resource type="ScoreResource" id="ScoreResource_gee14"]
+
 [node name="Game" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_uwrxv")]
@@ -132,6 +136,15 @@ position = Vector2(296, 64)
 [node name="Coin5" parent="Coins" instance=ExtResource("4_lbhrr")]
 position = Vector2(256, -16)
 
+[node name="Coin6" parent="Coins" instance=ExtResource("4_lbhrr")]
+position = Vector2(104, -40)
+
+[node name="Coin7" parent="Coins" instance=ExtResource("4_lbhrr")]
+position = Vector2(40, -72)
+
+[node name="Coin8" parent="Coins" instance=ExtResource("4_lbhrr")]
+position = Vector2(56, -72)
+
 [node name="Coin4" parent="Coins" instance=ExtResource("4_lbhrr")]
 position = Vector2(528, 48)
 
@@ -154,3 +167,30 @@ position = Vector2(358, 128)
 
 [node name="Enemy3" parent="Enemies" instance=ExtResource("3_p57ef")]
 position = Vector2(440, 0)
+
+[node name="ScoreLabel" type="ScoreLabel" parent="."]
+score_resource = ExtResource("1_gee14")
+offset_left = 616.0
+offset_top = 24.0
+offset_right = 680.0
+offset_bottom = 56.0
+theme_override_fonts/font = ExtResource("1_u5sy4")
+theme_override_font_sizes/font_size = 8
+text = "WOW!
+You got
+0 coins"
+horizontal_alignment = 1
+metadata/score = SubResource("ScoreResource_gee14")
+
+[node name="WarningLabel" type="Label" parent="."]
+offset_left = 88.0
+offset_top = -120.0
+offset_right = 184.0
+offset_bottom = -90.0
+theme_override_colors/font_color = Color(0.358998, 0.731773, 1, 1)
+theme_override_fonts/font = ExtResource("1_u5sy4")
+theme_override_font_sizes/font_size = 8
+text = "Warning!
+Nothing really to see here."
+horizontal_alignment = 1
+autowrap_mode = 3
