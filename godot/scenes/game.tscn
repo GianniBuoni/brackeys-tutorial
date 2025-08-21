@@ -1,13 +1,15 @@
-[gd_scene load_steps=16 format=4 uid="uid://1luetwjpkq1j"]
+[gd_scene load_steps=19 format=4 uid="uid://1luetwjpkq1j"]
 
-[ext_resource type="ScoreResource" uid="uid://busmseh6t7cbk" path="res://resources/score_resource.tres" id="1_gee14"]
 [ext_resource type="TileSet" uid="uid://j4ubvjqv4yt8" path="res://scenes/tilemap.tres" id="1_iywne"]
-[ext_resource type="FontFile" uid="uid://w824j5acijhb" path="res://assets/fonts/PixelOperator8.ttf" id="1_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://df0blvp7a5pdj" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://1nctnweq65un" path="res://scenes/platform.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://cdxu3mj2fcoit" path="res://scenes/enemy.tscn" id="3_p57ef"]
 [ext_resource type="PackedScene" uid="uid://xjyfomuum0fw" path="res://scenes/coin.tscn" id="4_lbhrr"]
 [ext_resource type="PackedScene" uid="uid://c4n0v7e4r5ugy" path="res://scenes/killplane.tscn" id="5_iywne"]
+[ext_resource type="Theme" uid="uid://ctyu3637a84bn" path="res://resources/main._theme.tres" id="7_0tnpc"]
+[ext_resource type="PackedScene" uid="uid://s6buq7ixp1v" path="res://scenes/dialog_marker.tscn" id="9_vtaks"]
+[ext_resource type="Resource" uid="uid://dthbf45tow6sy" path="res://assets/dialog/restart.dialogue" id="10_kvpfn"]
+[ext_resource type="Resource" uid="uid://cydbkcxiwppx" path="res://assets/dialog/warning.dialogue" id="10_vtaks"]
 
 [sub_resource type="Animation" id="Animation_p57ef"]
 length = 0.001
@@ -71,7 +73,11 @@ _data = {
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_iywne"]
 
-[sub_resource type="ScoreResource" id="ScoreResource_gee14"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dinhu"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kvpfn"]
+size = Vector2(16, 16)
 
 [node name="Game" type="Node2D"]
 
@@ -169,28 +175,26 @@ position = Vector2(358, 128)
 position = Vector2(440, 0)
 
 [node name="ScoreLabel" type="ScoreLabel" parent="."]
-score_resource = ExtResource("1_gee14")
-offset_left = 616.0
-offset_top = 24.0
-offset_right = 680.0
-offset_bottom = 56.0
-theme_override_fonts/font = ExtResource("1_u5sy4")
-theme_override_font_sizes/font_size = 8
+offset_left = 624.0
+offset_top = 16.0
+offset_right = 676.0
+offset_bottom = 46.0
+theme = ExtResource("7_0tnpc")
 text = "WOW!
 You got
-0 coins"
+0 coins."
 horizontal_alignment = 1
-metadata/score = SubResource("ScoreResource_gee14")
 
-[node name="WarningLabel" type="Label" parent="."]
-offset_left = 88.0
-offset_top = -120.0
-offset_right = 184.0
-offset_bottom = -90.0
-theme_override_colors/font_color = Color(0.358998, 0.731773, 1, 1)
-theme_override_fonts/font = ExtResource("1_u5sy4")
-theme_override_font_sizes/font_size = 8
-text = "Warning!
-Nothing really to see here."
-horizontal_alignment = 1
-autowrap_mode = 3
+[node name="GoalMarker" parent="." instance=ExtResource("9_vtaks")]
+dialog_resource = ExtResource("10_kvpfn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GoalMarker"]
+position = Vector2(648, 72)
+shape = SubResource("RectangleShape2D_dinhu")
+
+[node name="DialogMarker" parent="." instance=ExtResource("9_vtaks")]
+dialog_resource = ExtResource("10_vtaks")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DialogMarker"]
+position = Vector2(136, -72)
+shape = SubResource("RectangleShape2D_kvpfn")

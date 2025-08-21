@@ -1,0 +1,9 @@
+~ start
+You got so many coins!\nGo to next level?
+- [[Nope!|I'm fine staying here]] => confirm
+- [[Hell yeah!|YUS!|Sure thing.]]
+	do get_tree().reload_current_scene()
+=> END
+
+~ confirm
+OK, then!\nHave fun.

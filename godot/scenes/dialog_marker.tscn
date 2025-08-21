@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://s6buq7ixp1v"]
+
+[ext_resource type="Script" uid="uid://bf6rd4vpihux" path="res://scenes/dialog_marker.gd" id="1_ejs5e"]
+
+[node name="DialogMarker" type="Area2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_ejs5e")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
