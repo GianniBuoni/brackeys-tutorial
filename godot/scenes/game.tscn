@@ -74,8 +74,9 @@ _data = {
 [node name="Player" parent="." instance=ExtResource("1_uwrxv")]
 position = Vector2(195, 115)
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(195, 107)
+[node name="Camera2D" type="Camera2D" parent="Player"]
+physics_interpolation_mode = 1
+position = Vector2(0, -8)
 zoom = Vector2(3, 3)
 limit_left = -64
 limit_top = -144
