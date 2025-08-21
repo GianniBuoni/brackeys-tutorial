@@ -1,4 +1,7 @@
-use godot::{classes::RayCast2D, prelude::*};
+use godot::{
+    classes::{AnimatedSprite2D, RayCast2D},
+    prelude::*,
+};
 
 #[derive(GodotClass)]
 #[class(init, base=Node2D)]
@@ -31,6 +34,11 @@ impl INode2D for Enemy {
 
         if wall_collision.is_some() || no_ground.is_some() {
             self.direction *= -1.;
+            let mut sprite = self
+                .base_mut()
+                .get_node_as::<AnimatedSprite2D>("EnemySprite");
+            let flip_h = !sprite.is_flipped_h();
+            sprite.set_flip_h(flip_h);
         }
 
         let mut position = self.base().get_position();

@@ -47,7 +47,7 @@ speed = 20.0
 direction = 1.0
 z_index = 1
 
-[node name="Enemy Sprite" type="AnimatedSprite2D" parent="."]
+[node name="EnemySprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12.0075)
 sprite_frames = SubResource("SpriteFrames_xwavj")
 animation = &"idle"
@@ -55,11 +55,11 @@ autoplay = "idle"
 frame = 1
 frame_progress = 0.486708
 
-[node name="Killplane" parent="Enemy Sprite" instance=ExtResource("2_md0e3")]
+[node name="Killplane" parent="EnemySprite" instance=ExtResource("2_md0e3")]
 position = Vector2(0, 12.0075)
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy Sprite/Killplane"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySprite/Killplane"]
 position = Vector2(0, -6.5)
 shape = SubResource("RectangleShape2D_md0e3")
 
