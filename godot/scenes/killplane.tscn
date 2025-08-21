@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c4n0v7e4r5ugy"]
 
 [node name="Killplane" type="KillPlane"]
+collision_mask = 2
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.6

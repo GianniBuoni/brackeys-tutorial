@@ -171,7 +171,7 @@ animations = [{
 
 [node name="Player" type="PlayerController"]
 z_index = 1
-collision_layer = 3
+collision_layer = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -12)
