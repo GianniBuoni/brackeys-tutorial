@@ -1,5 +1,5 @@
 use godot::{
-    classes::{Area2D, IArea2D, Timer},
+    classes::{Area2D, CollisionShape2D, Engine, IArea2D, Timer},
     prelude::*,
 };
 
@@ -31,8 +31,11 @@ impl KillPlane {
     fn kill();
 
     #[func]
-    fn kill_player(&mut self, _body: Gd<Node2D>) {
+    fn kill_player(&mut self, body: Gd<Node2D>) {
         godot_print!("You died.");
+        Engine::singleton().set_time_scale(0.5);
+        body.get_node_as::<CollisionShape2D>("CollisionShape2D")
+            .queue_free();
         self.reset_timer.start();
     }
 
@@ -40,6 +43,7 @@ impl KillPlane {
     fn reload_game(&mut self) {
         if let Some(mut scene) = self.reset_timer.get_tree() {
             scene.reload_current_scene();
+            Engine::singleton().set_time_scale(1.);
         }
     }
 }
