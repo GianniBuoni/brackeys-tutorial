@@ -1,6 +1,6 @@
 {
   description = ''
-    Starter Rust dev and build flake.
+    Build and devev flake for a demo godot_bevy project.
   '';
 
   inputs = {
@@ -26,7 +26,17 @@
       system: let
         pkgs = (import nixpkgs) {inherit system;};
         nativeBuildInputs = with pkgs; [pkg-config];
-        buildInputs = [];
+        buildInputs = with pkgs; [
+          alsa-lib
+          libxkbcommon
+          vulkan-loader
+          wayland # To use the wayland feature
+          udev
+          xorg.libX11
+          xorg.libXcursor
+          xorg.libXi
+          xorg.libXrandr # To use the x11 feature
+        ];
         naersk' = pkgs.callPackage naersk {};
         mkApp = release: mode: {
           src = ./rust/.;

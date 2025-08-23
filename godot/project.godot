@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-run/main_scene="uid://1luetwjpkq1j"
+run/main_scene="uid://d1r7s3cujdgh1"
 config/features=PackedStringArray("4.4")
 
 [audio]
@@ -21,6 +21,7 @@ buses/default_bus_layout="res://resources/default_bus_layout.tres"
 
 BgMusic="*res://scenes/bg_music.tscn"
 DialogueManager="*res://addons/dialogue_manager/dialogue_manager.gd"
+BevyAppSingleton="*res://scenes/bevy_app_singleton.tscn"
 
 [dialogue_manager]
 
@@ -28,6 +29,8 @@ runtime/balloon_path="res://scenes/balloon.tscn"
 
 [display]
 
+window/size/viewport_width=640
+window/size/viewport_height=320
 window/stretch/mode="viewport"
 
 [editor_plugins]

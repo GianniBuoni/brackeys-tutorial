@@ -1,8 +1,12 @@
+debug:
+    git add .
+    nix build .#debug
+
 build:
     git add .
     nix build .
 
-editor:
+godot:
     godot godot/project.godot &
 
 [working-directory: './rust']

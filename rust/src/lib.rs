@@ -1,22 +1,31 @@
+#![allow(unexpected_cfgs)]
+use bevy::{prelude::*, state::app::StatesPlugin};
+use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
 use godot::prelude::*;
+use godot_bevy::prelude::*;
 
-mod enemy;
-mod killplane;
-mod pickup_component;
-mod player_controller;
-mod score_label;
-mod score_resource;
-
-pub mod prelude {
-    pub use super::constants::*;
-}
-pub mod constants {
-    pub const PLAYER_SPEED: f32 = 130.;
-    pub const PLAYER_JUMP: f32 = -300.;
-    pub const SCORE_RESOURCE: &str = "res://resources/score_resource.tres";
+#[bevy_app]
+fn build_app(app: &mut App) {
+    app.add_plugins(GodotDefaultPlugins);
+    app.add_plugins(StatesPlugin)
+        .init_state::<GameState>()
+        .add_loading_state(
+            LoadingState::new(GameState::Loading)
+                .continue_to_state(GameState::MainMenu),
+        );
+    app.add_systems(Startup, hello_world);
 }
 
-struct MyExtension;
+fn hello_world() {
+    info!("Hello from bevy!")
+}
 
-#[gdextension]
-unsafe impl ExtensionLibrary for MyExtension {}
+#[allow(dead_code)]
+#[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
+enum GameState {
+    #[default]
+    Loading,
+    MainMenu,
+    PauseMenu,
+    InGame,
+}
