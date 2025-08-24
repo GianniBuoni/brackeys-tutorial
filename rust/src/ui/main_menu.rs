@@ -1,5 +1,4 @@
 use super::*;
-use godot::prelude::*;
 
 pub mod prelude {
     pub use super::main_menu_plugin;
@@ -21,11 +20,8 @@ pub struct MainMenuTree {
     quit_button: GodotNodeHandle,
 }
 
-#[derive(
-    Event, Clone, Copy, Debug, Default, PartialOrd, Ord, PartialEq, Eq,
-)]
+#[derive(Event, Clone, Copy, Debug, PartialOrd, Ord, PartialEq, Eq)]
 pub enum EMainMenu {
-    #[default]
     Start,
     Quit,
 }
@@ -41,33 +37,6 @@ impl MenuConstruct for MenuAssets<EMainMenu> {
         menu_assets.register_button(EMainMenu::Quit, nodes.quit_button.clone());
         info!("Main Menu: node initialized!");
         menu_assets.initialized = true;
-    }
-    fn connect_signals(mut menu_assets: ResMut<Self>, signals: GodotSignals) {
-        menu_assets
-            .buttons
-            .values_mut()
-            .for_each(|f| signals.connect(f, "pressed"));
-        info!("Main Menu: signals connected!");
-        menu_assets.signals_connected = true;
-    }
-    fn handle_events(
-        menu_assets: Res<Self>,
-        mut events: EventReader<GodotSignal>,
-        mut cmd: Commands,
-    ) {
-        events
-            .read()
-            .filter(|f| f.target.clone().try_get::<Node>().is_some())
-            .for_each(|signal| {
-                let Some(event) = menu_assets
-                    .buttons
-                    .iter()
-                    .find(|(_, v)| **v == signal.target)
-                else {
-                    return;
-                };
-                cmd.trigger(*event.0);
-            });
     }
 }
 
