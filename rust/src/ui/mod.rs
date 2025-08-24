@@ -1,10 +1,16 @@
 use bevy::prelude::*;
-use godot::{classes::Button, prelude::*};
+use godot::prelude::*;
 use godot_bevy::prelude::*;
 
 use crate::prelude::*;
 
 pub struct MenuPlugin;
+
+#[derive(Debug, PartialEq, Event)]
+pub enum MenuEvent {
+    Start,
+    Quit,
+}
 
 impl Plugin for MenuPlugin {
     fn build(&self, app: &mut App) {
@@ -19,8 +25,11 @@ impl Plugin for MenuPlugin {
             )
                 .run_if(in_state(GameState::MainMenu)),
         );
+        app.add_observer(quit_game);
+        app.add_observer(start_game);
     }
 }
+
 /// Describes the hierarchy of interactable elements
 /// in the scene tree.
 #[derive(NodeTreeView)]
@@ -30,6 +39,7 @@ pub struct MainMenuTree {
     #[node("*/Control/Options/QuitButton")]
     quit_button: GodotNodeHandle,
 }
+
 /// ESC representation of MainMenuTree with data
 /// for initialization and signal connection checks.
 #[derive(Resource, Default)]
@@ -53,10 +63,8 @@ fn init_menu_assets(
     mut scene_tree: SceneTreeRef,
 ) {
     let Some(root) = scene_tree.get().get_root() else {
-        // TODO handle error
         return;
     };
-    // TODO: from_node() can panic?
     let menu_tree = MainMenuTree::from_node(root);
     info!("MainMenu: Found menu nodes.");
     menu_assets.start_button = Some(menu_tree.start_button);
@@ -77,36 +85,40 @@ fn connect_buttons(mut menu_assets: ResMut<MenuAssets>, signals: GodotSignals) {
     menu_assets.signals_connected = true;
 }
 
-// TODO: rewrite to use observer events?
 fn on_button_press(
-    mut events: EventReader<GodotSignal>,
     menu_assets: Res<MenuAssets>,
-    mut _app_state: ResMut<NextState<GameState>>,
-    // add event writer if needed
+    mut events: EventReader<GodotSignal>,
+    mut cmd: Commands,
 ) {
     events
         .read()
         .filter(|f| f.target.clone().try_get::<Node>().is_some())
         .for_each(|f| {
-            let Some(start_button) = &menu_assets.start_button else {
+            let Some(start_button) = menu_assets.start_button.as_ref() else {
                 return;
             };
-            if &f.target == start_button {
-                info!("Main Menu: Start button pressed.");
-                // load game here
-            }
-            let Some(quit_button) = &menu_assets.quit_button else {
+            let Some(quit_button) = menu_assets.quit_button.as_ref() else {
                 return;
             };
-            if &f.target == quit_button {
-                info!("Main Menu: Quit button pressed.");
-                if let Some(button) = f.target.clone().try_get::<Button>()
-                    && let Some(mut tree) = button.get_tree()
-                {
-                    tree.quit();
-                }
+            match &f.target {
+                node if node == start_button => cmd.trigger(MenuEvent::Start),
+                node if node == quit_button => cmd.trigger(MenuEvent::Quit),
+                _ => {}
             }
         });
+}
+
+fn quit_game(trigger: Trigger<MenuEvent>, mut scene_tree: SceneTreeRef) {
+    if *trigger.event() == MenuEvent::Quit {
+        info!("Main Menu: Quit button pressed.");
+        scene_tree.get().quit();
+    }
+}
+
+fn start_game(trigger: Trigger<MenuEvent>) {
+    if *trigger.event() == MenuEvent::Start {
+        info!("Main Menu: Start button pressed.");
+    }
 }
 
 // Helper functions for system running
