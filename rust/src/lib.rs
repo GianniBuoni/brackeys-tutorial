@@ -4,6 +4,12 @@ use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
 use godot::prelude::*;
 use godot_bevy::prelude::*;
 
+mod ui;
+
+pub mod prelude {
+    pub use super::GameState;
+}
+
 #[bevy_app]
 fn build_app(app: &mut App) {
     app.add_plugins(GodotDefaultPlugins);
@@ -13,6 +19,7 @@ fn build_app(app: &mut App) {
             LoadingState::new(GameState::Loading)
                 .continue_to_state(GameState::MainMenu),
         );
+    app.add_plugins(ui::MenuPlugin);
     app.add_systems(Startup, hello_world);
 }
 
@@ -22,7 +29,7 @@ fn hello_world() {
 
 #[allow(dead_code)]
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
-enum GameState {
+pub enum GameState {
     #[default]
     Loading,
     MainMenu,
