@@ -19,7 +19,7 @@ fn build_app(app: &mut App) {
             LoadingState::new(GameState::Loading)
                 .continue_to_state(GameState::MainMenu),
         );
-    app.add_plugins(ui::MenuPlugin);
+    app.add_plugins(ui::prelude::main_menu_plugin);
     app.add_systems(Startup, hello_world);
 }
 
