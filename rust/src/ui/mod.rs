@@ -6,12 +6,7 @@ use crate::prelude::*;
 
 pub struct MenuPlugin;
 
-#[derive(Debug, PartialEq, Event)]
-pub enum MenuEvent {
-    Start,
-    Quit,
-}
-
+// TODO: Decouple plugin from the Main Menu
 impl Plugin for MenuPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<MenuAssets>();
@@ -28,6 +23,12 @@ impl Plugin for MenuPlugin {
         app.add_observer(quit_game);
         app.add_observer(start_game);
     }
+}
+
+#[derive(Debug, PartialEq, Event)]
+pub enum MenuEvent {
+    Start,
+    Quit,
 }
 
 /// Describes the hierarchy of interactable elements
@@ -115,9 +116,12 @@ fn quit_game(trigger: Trigger<MenuEvent>, mut scene_tree: SceneTreeRef) {
     }
 }
 
-fn start_game(trigger: Trigger<MenuEvent>) {
+fn start_game(trigger: Trigger<MenuEvent>, mut scene_tree: SceneTreeRef) {
     if *trigger.event() == MenuEvent::Start {
         info!("Main Menu: Start button pressed.");
+        scene_tree
+            .get()
+            .change_scene_to_file("./scenes/levels/level_01.tscn");
     }
 }
 
