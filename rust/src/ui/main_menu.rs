@@ -3,11 +3,7 @@ use crate::GameState;
 use super::*;
 use menu_plugin::prelude::*;
 
-pub mod prelude {
-    pub use super::main_menu_plugin;
-}
-
-pub fn main_menu_plugin(app: &mut App) {
+pub fn plugin(app: &mut App) {
     let mut plugin = MenuPlugin::<MenuAssets<EMainMenu>, GameState>::default();
     plugin.with_state(GameState::MainMenu);
     plugin.with_name("Main Menu");
@@ -52,12 +48,17 @@ fn init(
     menu_assets.initialized = true;
 }
 
-fn start_game(trigger: Trigger<EMainMenu>, mut scene_tree: SceneTreeRef) {
+fn start_game(
+    trigger: Trigger<EMainMenu>,
+    mut scene_tree: SceneTreeRef,
+    mut state: ResMut<NextState<GameState>>,
+) {
     if *trigger.event() == EMainMenu::Start {
         info!("Main Menu: starting game.");
         scene_tree
             .get()
             .change_scene_to_file("./scenes/levels/level_01.tscn");
+        state.set(GameState::InGame);
     }
 }
 

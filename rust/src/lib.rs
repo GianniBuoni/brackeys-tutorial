@@ -4,6 +4,7 @@ use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
 use godot::prelude::*;
 use godot_bevy::prelude::*;
 
+mod actors;
 mod ui;
 
 pub mod prelude {
@@ -19,7 +20,8 @@ fn build_app(app: &mut App) {
             LoadingState::new(GameState::Loading)
                 .continue_to_state(GameState::MainMenu),
         );
-    app.add_plugins(ui::prelude::main_menu_plugin);
+    app.add_plugins(ui::plugin);
+    app.add_plugins(actors::plugin);
     app.add_systems(Startup, hello_world);
 }
 

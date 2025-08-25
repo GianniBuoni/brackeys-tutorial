@@ -3,6 +3,6 @@ use godot_bevy::prelude::*;
 
 mod main_menu;
 
-pub mod prelude {
-    pub use super::main_menu::prelude::*;
+pub fn plugin(app: &mut App) {
+    app.add_plugins(main_menu::plugin);
 }
