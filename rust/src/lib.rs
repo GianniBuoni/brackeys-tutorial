@@ -28,7 +28,7 @@ fn hello_world() {
 }
 
 #[allow(dead_code)]
-#[derive(Debug, Default, Clone, Eq, PartialEq, Hash, States)]
+#[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash, States)]
 pub enum GameState {
     #[default]
     Loading,

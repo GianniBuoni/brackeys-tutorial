@@ -1,11 +1,23 @@
+use crate::GameState;
+
 use super::*;
+use menu_plugin::prelude::*;
 
 pub mod prelude {
     pub use super::main_menu_plugin;
 }
 
 pub fn main_menu_plugin(app: &mut App) {
-    app.add_plugins(MenuPlugin::<MenuAssets<EMainMenu>>::new());
+    let mut plugin = MenuPlugin::<MenuAssets<EMainMenu>, GameState>::default();
+    plugin.with_state(GameState::MainMenu);
+    plugin.with_name("Main Menu");
+
+    app.add_plugins(plugin);
+    app.add_systems(
+        Update,
+        init.run_if(MenuAssets::<EMainMenu>::not_init)
+            .run_if(in_state(GameState::MainMenu)),
+    );
     app.add_observer(start_game);
     app.add_observer(quit_game);
 }
@@ -26,18 +38,18 @@ pub enum EMainMenu {
     Quit,
 }
 
-impl MenuConstruct for MenuAssets<EMainMenu> {
-    fn init(mut menu_assets: ResMut<Self>, mut scene_tree: SceneTreeRef) {
-        let Some(root) = scene_tree.get().get_root() else {
-            return;
-        };
-        let nodes = MainMenuTree::from_node(root);
-        menu_assets
-            .register_button(EMainMenu::Start, nodes.start_button.clone());
-        menu_assets.register_button(EMainMenu::Quit, nodes.quit_button.clone());
-        info!("Main Menu: node initialized!");
-        menu_assets.initialized = true;
-    }
+fn init(
+    mut menu_assets: ResMut<MenuAssets<EMainMenu>>,
+    mut scene_tree: SceneTreeRef,
+) {
+    let Some(root) = scene_tree.get().get_root() else {
+        return;
+    };
+    let nodes = MainMenuTree::from_node(root);
+    menu_assets.register_button(EMainMenu::Start, nodes.start_button.clone());
+    menu_assets.register_button(EMainMenu::Quit, nodes.quit_button.clone());
+    info!("{}: node initialized!", menu_assets.name);
+    menu_assets.initialized = true;
 }
 
 fn start_game(trigger: Trigger<EMainMenu>, mut scene_tree: SceneTreeRef) {
