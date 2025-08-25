@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbqi3f1mnjg8q"]
+
+[ext_resource type="Theme" uid="uid://dlfbaik136brh" path="res://resources/balloon_theme.tres" id="1_hqnrr"]
+[ext_resource type="Texture2D" uid="uid://c5a4jb3abxgvv" path="res://assets/sprites/coin.png" id="2_bo48s"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqnrr"]
+atlas = ExtResource("2_bo48s")
+region = Rect2(0, 0, 16, 16)
+
+[node name="Hud" type="CanvasLayer"]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 58.0
+offset_bottom = 36.0
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme = ExtResource("1_hqnrr")
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_hqnrr")
+expand_mode = 2
+
+[node name="CoinLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "0"
