@@ -3,7 +3,7 @@ use std::{
 };
 
 use bevy::prelude::*;
-use godot::prelude::*;
+use godot::{classes::Button, prelude::*};
 use godot_bevy::prelude::*;
 
 pub mod prelude {
@@ -179,7 +179,13 @@ where
         menu_assets
             .buttons
             .values_mut()
-            .for_each(|f| signals.connect(f, "pressed"));
+            .enumerate()
+            .for_each(|(i, f)| {
+                signals.connect(f, "pressed");
+                if i == 0 {
+                    f.get::<Button>().grab_focus();
+                }
+            });
         info!("{}: signals connected!", menu_assets.name);
         menu_assets.signals_connected = true;
     }
