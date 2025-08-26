@@ -4,6 +4,7 @@ use godot_bevy::prelude::*;
 
 use crate::prelude::*;
 
+mod hud;
 mod killplane;
 mod pickup;
 
@@ -13,6 +14,7 @@ pub mod prelude {
 
 pub fn plugin(app: &mut App) {
     app.init_resource::<PlayerScore>();
+    app.add_plugins(hud::HudPlugin);
     app.add_plugins(killplane::KillplanePlugin);
     app.add_plugins(pickup::PickupPlugin);
     app.add_systems(OnEnter(GameState::Reloading), reset_scene);
