@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://cdxu3mj2fcoit"]
 
 [ext_resource type="Texture2D" uid="uid://b7dgcc08lcjeh" path="res://assets/sprites/slime_green.png" id="1_7p1mj"]
-[ext_resource type="PackedScene" uid="uid://c4n0v7e4r5ugy" path="res://scenes/killplane.tscn" id="2_md0e3"]
+[ext_resource type="PackedScene" uid="uid://dpwvvi68kirm6" path="res://scenes/entities/kill_plane_node.tscn" id="2_67neu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_md0e3"]
 atlas = ExtResource("1_7p1mj")
@@ -39,12 +39,11 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_md0e3"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ktqfp"]
 size = Vector2(10, 13)
 
-[node name="Enemy" type="Enemy"]
+[node name="Enemy" type="EnemyNode"]
 speed = 20.0
-direction = 1.0
 z_index = 1
 
 [node name="EnemySprite" type="AnimatedSprite2D" parent="."]
@@ -52,24 +51,13 @@ position = Vector2(0, -12.0075)
 sprite_frames = SubResource("SpriteFrames_xwavj")
 animation = &"idle"
 autoplay = "idle"
-frame = 1
-frame_progress = 0.486708
-
-[node name="Killplane" parent="EnemySprite" instance=ExtResource("2_md0e3")]
-position = Vector2(0, 12.0075)
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySprite/Killplane"]
-position = Vector2(0, -6.5)
-shape = SubResource("RectangleShape2D_md0e3")
 
 [node name="WallCasts" type="Node2D" parent="."]
 
 [node name="RightWallCast" type="RayCast2D" parent="WallCasts"]
 position = Vector2(0, -8)
 rotation = -1.5708
-scale = Vector2(1.33746, 1.29289)
-target_position = Vector2(-2.14577e-05, 6.18769)
+target_position = Vector2(0, 8)
 
 [node name="LeftWallCast" type="RayCast2D" parent="WallCasts"]
 position = Vector2(0, -8)
@@ -85,3 +73,10 @@ target_position = Vector2(0, 8)
 [node name="RightGroundCast" type="RayCast2D" parent="GroundCasts"]
 position = Vector2(8, -8)
 target_position = Vector2(0, 8)
+
+[node name="KillPlaneNode" parent="." instance=ExtResource("2_67neu")]
+position = Vector2(-104, -16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KillPlaneNode"]
+position = Vector2(104, 9.5)
+shape = SubResource("RectangleShape2D_ktqfp")
