@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cdxu3mj2fcoit" path="res://scenes/entities/enemy.tscn" id="6_50wog"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_50wog"]
-distance = -240.0
+distance = -296.0
 
 [node name="Level01" type="Node2D"]
 
@@ -37,12 +37,16 @@ position_smoothing_enabled = true
 [node name="KillPlaneNode" parent="." instance=ExtResource("4_qdh5e")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KillPlaneNode"]
+position = Vector2(0, -40)
 shape = SubResource("WorldBoundaryShape2D_50wog")
 
 [node name="Platforms" type="Node2D" parent="."]
 
 [node name="Platform" parent="Platforms" instance=ExtResource("4_uvc87")]
 position = Vector2(176, 104)
+
+[node name="Platform2" parent="Platforms" instance=ExtResource("4_uvc87")]
+position = Vector2(480, 72)
 
 [node name="Enemies" type="Node2D" parent="."]
 

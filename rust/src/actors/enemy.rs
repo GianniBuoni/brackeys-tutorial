@@ -91,7 +91,7 @@ fn detect_walls(
             }
             Aok(())
         })
-        .map_err(|e| warn!("{e}"));
+        .map_err(|e| error_once!("{e}"));
 }
 
 fn change_dir(
@@ -133,5 +133,5 @@ fn apply_direction(
 
             Aok(())
         })
-        .map_err(|e| warn!("{e}"));
+        .map_err(|e| error_once!("{e}"));
 }

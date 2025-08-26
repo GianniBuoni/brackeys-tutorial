@@ -39,8 +39,7 @@ impl Plugin for KillplanePlugin {
         app.init_resource::<RKillplanes>();
         app.init_resource::<RKillTimer>();
         app.add_event::<EKillPlayer>();
-        app.add_event::<EResetScene>();
-        app.add_systems(OnEnter(GameState::InGame), reset);
+        app.add_systems(OnEnter(GameState::InGame), (reset, timer_reset));
         app.add_systems(
             Update,
             connect_signals
@@ -48,7 +47,7 @@ impl Plugin for KillplanePlugin {
                 .run_if(in_state(GameState::InGame)),
         );
         app.add_systems(
-            PhysicsUpdate,
+            Update,
             (detect_collision, activate_timer, tick_timer, kill)
                 .run_if(initialized)
                 .run_if(in_state(GameState::InGame))
@@ -59,6 +58,12 @@ impl Plugin for KillplanePlugin {
 
 fn reset(mut killplane_assets: ResMut<RKillplanes>) {
     killplane_assets.set_if_neq(RKillplanes::default());
+    info!("Killplane: Assets reset.")
+}
+
+fn timer_reset(mut kill_timer: ResMut<RKillTimer>) {
+    kill_timer.set_if_neq(RKillTimer::default());
+    info!("Killplane: Timer reset.")
 }
 
 #[main_thread_system]
@@ -91,22 +96,18 @@ fn detect_collision(
     mut signal_events: EventReader<GodotSignal>,
     mut kill_player: EventWriter<EKillPlayer>,
 ) {
-    if signal_events.is_empty() || killplanes.is_empty() {
-        return;
-    }
     let targets = signal_events
         .read()
         .filter(|f| f.name == "body_entered")
         .map(|f| f.target.clone())
         .collect::<Vec<GodotNodeHandle>>();
 
-    if targets.len() > 1 {
-        info!("{}", targets.len());
+    if targets.len() > 0 {
+        info!("Killplane: {} targent", targets.len());
     }
-
     if killplanes.iter().any(|f| targets.contains(f)) {
         kill_player.write(EKillPlayer);
-        info!("Player death triggered.");
+        info!("Player died.");
     };
 }
 
@@ -118,7 +119,6 @@ fn activate_timer(
     for _ in kill_player.read() {
         Engine::singleton().set_time_scale(0.5);
         kill_timer.active = true;
-        info!("Player died.");
     }
 }
 
@@ -128,15 +128,9 @@ fn tick_timer(mut kill_timer: ResMut<RKillTimer>, delta: Res<PhysicsDelta>) {
     }
 }
 
-fn kill(
-    mut kill_timer: ResMut<RKillTimer>,
-    mut state: ResMut<NextState<GameState>>,
-    mut reset_scene: EventWriter<EResetScene>,
-) {
+fn kill(kill_timer: Res<RKillTimer>, mut state: ResMut<NextState<GameState>>) {
     if kill_timer.timer.just_finished() {
-        kill_timer.set_if_neq(RKillTimer::default());
-        state.set(GameState::Loading);
-        reset_scene.write(EResetScene);
+        state.set(GameState::Reloading);
         info!("Kill timer finished: reload triggered.")
     }
 }

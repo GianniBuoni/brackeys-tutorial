@@ -58,14 +58,14 @@ impl Plugin for PlayerControllerPlugin {
 
 #[main_thread_system]
 fn detect_input(
-    mut player: Query<&mut GodotNodeHandle, With<Player>>,
+    mut player: Query<
+        &mut GodotNodeHandle,
+        (With<CharacterBody2DMarker>, With<Player>),
+    >,
     mut input_events: EventWriter<EPlayerInput>,
 ) {
     // if there is no player node, then no input events are recorded
-    let Ok(mut handle) = player.single_mut() else {
-        return;
-    };
-    let Some(_) = handle.try_get::<CharacterBody2D>() else {
+    let Ok(_) = player.single_mut() else {
         return;
     };
     let input = Input::singleton();
@@ -82,7 +82,7 @@ fn detect_input(
 fn set_movement(
     mut player: Query<
         (&mut GodotNodeHandle, &Speed, &JumpVelocity),
-        With<Player>,
+        (With<CharacterBody2DMarker>, With<Player>),
     >,
     mut input_events: EventReader<EPlayerInput>,
     mut movement_events: EventWriter<EPlayerMovement>,
@@ -91,9 +91,7 @@ fn set_movement(
     let Ok((mut handle, speed, jump_velocity)) = player.single_mut() else {
         return;
     };
-    let Some(mut char_body) = handle.try_get::<CharacterBody2D>() else {
-        return;
-    };
+    let mut char_body = handle.get::<CharacterBody2D>();
 
     let mut velocity = char_body.get_velocity();
     let grounded = char_body.is_on_floor();
@@ -133,53 +131,58 @@ fn set_movement(
 
 #[main_thread_system]
 fn set_animation(
-    mut player: Query<&mut GodotNodeHandle, With<Player>>,
+    mut player: Query<
+        &mut GodotNodeHandle,
+        (With<CharacterBody2DMarker>, With<Player>),
+    >,
     mut movement_events: EventReader<EPlayerMovement>,
 ) {
-    let Ok(mut handle) = player.single_mut() else {
-        return;
-    };
-    let Some(char_body) = handle.try_get::<CharacterBody2D>() else {
-        return;
-    };
-    let Some(mut sprite) =
-        char_body.try_get_node_as::<AnimatedSprite2D>("AnimatedSprite2D")
-    else {
-        return;
-    };
-    movement_events.read().for_each(|f| {
-        if !f.grounded {
-            sprite.play_ex().name("jump").done();
-            return;
-        }
-        match f.is_moving {
-            true => {
-                sprite.play_ex().name("run").done();
-                sprite.set_flip_h(f.facing_left);
+    let path = "AnimatedSprite2D";
+    let _ = (|| {
+        let mut sprite = player
+            .single_mut()?
+            .get::<CharacterBody2D>()
+            .try_get_node_as::<AnimatedSprite2D>(path)
+            .ok_or(NodeError::not_found("Player", path))?;
+
+        movement_events.read().for_each(|f| {
+            sprite.set_flip_h(f.facing_left);
+            if !f.grounded {
+                sprite.play_ex().name("jump").done();
+                return;
             }
-            false => sprite.play_ex().name("idle").done(),
-        }
-    });
+            match f.is_moving {
+                true => {
+                    sprite.play_ex().name("run").done();
+                }
+                false => sprite.play_ex().name("idle").done(),
+            }
+        });
+        Aok(())
+    })()
+    .map_err(|e| error_once!("{e}"));
 }
 
 #[main_thread_system]
 fn kill(
-    mut player: Query<&mut GodotNodeHandle, With<Player>>,
-    kill_player: EventReader<EKillPlayer>,
+    mut player: Query<
+        &mut GodotNodeHandle,
+        (With<CharacterBody2DMarker>, With<Player>),
+    >,
+    mut kill_player: EventReader<EKillPlayer>,
 ) {
-    if kill_player.is_empty() {
-        return;
-    }
-    let Ok(mut handle) = player.single_mut() else {
-        return;
-    };
-    let Some(char_body) = handle.try_get::<CharacterBody2D>() else {
-        return;
-    };
-    let Some(mut collider) =
-        char_body.try_get_node_as::<CollisionShape2D>("CollisionShape2D")
-    else {
-        return;
-    };
-    collider.set_disabled(true);
+    let _ = kill_player
+        .read()
+        .try_for_each(|_| {
+            let path = "CollisionShape2D";
+            let mut collider = player
+                .single_mut()?
+                .get::<CharacterBody2D>()
+                .try_get_node_as::<CollisionShape2D>(path)
+                .ok_or(NodeError::not_found("Player", path))?;
+
+            collider.set_disabled(true);
+            Aok(())
+        })
+        .map_err(|e| error_once!("{e}"));
 }

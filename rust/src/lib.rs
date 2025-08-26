@@ -42,6 +42,7 @@ fn hello_world() {
 pub enum GameState {
     #[default]
     Loading,
+    Reloading,
     MainMenu,
     PauseMenu,
     InGame,
