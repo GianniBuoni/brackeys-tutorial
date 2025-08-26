@@ -1,4 +1,7 @@
 #![allow(unexpected_cfgs)]
+#![allow(clippy::type_complexity)]
+use std::{fmt::Display, sync::Arc};
+
 use bevy::{prelude::*, state::app::StatesPlugin};
 use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
 use godot::prelude::*;
@@ -9,8 +12,10 @@ mod gameplay;
 mod ui;
 
 pub mod prelude {
-    pub use super::GameState;
     pub use super::gameplay::*;
+    pub use super::{GameState, NodeError};
+    pub use anyhow;
+    pub use anyhow::Ok as Aok;
 }
 
 #[bevy_app]
@@ -40,4 +45,28 @@ pub enum GameState {
     MainMenu,
     PauseMenu,
     InGame,
+}
+
+#[derive(Debug)]
+pub enum NodeError {
+    /// (root node, path)
+    NotFound(Arc<str>, Arc<str>),
+}
+
+impl std::error::Error for NodeError {}
+
+impl std::fmt::Display for NodeError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::NotFound(root, path) => {
+                write!(f, "{root}: {path} not found.")
+            }
+        }
+    }
+}
+
+impl NodeError {
+    pub fn not_found(root_name: impl Display, path: impl Display) -> Self {
+        Self::NotFound(root_name.to_string().into(), path.to_string().into())
+    }
 }

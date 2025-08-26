@@ -10,6 +10,7 @@ crate-type = ["cdylib"]
 members = ["crates/menu_plugin"]
 
 [dependencies]
+anyhow = "1.0.99"
 bevy = { version = "0.16.1", default-features = false, features = ["bevy_state"] }
 bevy_asset_loader = "0.23.0"
 godot = "0.3.4"
