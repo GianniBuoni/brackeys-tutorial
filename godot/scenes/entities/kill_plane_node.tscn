@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://dpwvvi68kirm6"]
+
+[node name="KillPlaneNode" type="KillPlaneNode"]
+collision_mask = 2

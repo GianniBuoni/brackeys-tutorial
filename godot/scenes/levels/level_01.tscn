@@ -1,8 +1,13 @@
-[gd_scene load_steps=4 format=4 uid="uid://cho2c1hcbf321"]
+[gd_scene load_steps=7 format=4 uid="uid://cho2c1hcbf321"]
 
 [ext_resource type="PackedScene" uid="uid://cbqi3f1mnjg8q" path="res://scenes/ui/hud.tscn" id="1_i2aat"]
 [ext_resource type="TileSet" uid="uid://j4ubvjqv4yt8" path="res://resources/tilemap.tres" id="1_m802k"]
-[ext_resource type="PackedScene" uid="uid://df0blvp7a5pdj" path="res://scenes/actors/player.tscn" id="3_2djvx"]
+[ext_resource type="PackedScene" uid="uid://df0blvp7a5pdj" path="res://scenes/entities/player.tscn" id="3_2djvx"]
+[ext_resource type="PackedScene" uid="uid://dpwvvi68kirm6" path="res://scenes/entities/kill_plane_node.tscn" id="4_qdh5e"]
+[ext_resource type="PackedScene" uid="uid://1nctnweq65un" path="res://scenes/entities/platform.tscn" id="4_uvc87"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_50wog"]
+distance = -240.0
 
 [node name="Level01" type="Node2D"]
 
@@ -27,3 +32,13 @@ limit_top = -112
 limit_right = 736
 limit_bottom = 320
 position_smoothing_enabled = true
+
+[node name="KillPlaneNode" parent="." instance=ExtResource("4_qdh5e")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KillPlaneNode"]
+shape = SubResource("WorldBoundaryShape2D_50wog")
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="Platform" parent="Platforms" instance=ExtResource("4_uvc87")]
+position = Vector2(176, 104)

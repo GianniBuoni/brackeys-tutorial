@@ -5,10 +5,12 @@ use godot::prelude::*;
 use godot_bevy::prelude::*;
 
 mod actors;
+mod gameplay;
 mod ui;
 
 pub mod prelude {
     pub use super::GameState;
+    pub use super::gameplay::*;
 }
 
 #[bevy_app]
@@ -22,6 +24,7 @@ fn build_app(app: &mut App) {
         );
     app.add_plugins(ui::plugin);
     app.add_plugins(actors::plugin);
+    app.add_plugins(gameplay::plugin);
     app.add_systems(Startup, hello_world);
 }
 

@@ -1,7 +1,9 @@
-use godot::classes::{AnimatedSprite2D, CharacterBody2D, Input};
+use godot::classes::{
+    AnimatedSprite2D, CharacterBody2D, CollisionShape2D, Input,
+};
 use godot_bevy::utils::move_toward;
 
-use crate::GameState;
+use crate::prelude::*;
 
 use super::*;
 
@@ -46,6 +48,10 @@ impl Plugin for PlayerControllerPlugin {
             (detect_input, set_movement, set_animation)
                 .chain()
                 .run_if(in_state(GameState::InGame)),
+        );
+        app.add_systems(
+            PhysicsUpdate,
+            kill.run_if(in_state(GameState::InGame)),
         );
     }
 }
@@ -147,9 +153,33 @@ fn set_animation(
             return;
         }
         match f.is_moving {
-            true => sprite.play_ex().name("run").done(),
+            true => {
+                sprite.play_ex().name("run").done();
+                sprite.set_flip_h(f.facing_left);
+            }
             false => sprite.play_ex().name("idle").done(),
         }
-        sprite.set_flip_h(f.facing_left);
     });
+}
+
+#[main_thread_system]
+fn kill(
+    mut player: Query<&mut GodotNodeHandle, With<Player>>,
+    kill_player: EventReader<EKillPlayer>,
+) {
+    if kill_player.is_empty() {
+        return;
+    }
+    let Ok(mut handle) = player.single_mut() else {
+        return;
+    };
+    let Some(char_body) = handle.try_get::<CharacterBody2D>() else {
+        return;
+    };
+    let Some(mut collider) =
+        char_body.try_get_node_as::<CollisionShape2D>("CollisionShape2D")
+    else {
+        return;
+    };
+    collider.set_disabled(true);
 }
