@@ -102,9 +102,6 @@ fn detect_collision(
         .map(|f| f.target.clone())
         .collect::<Vec<GodotNodeHandle>>();
 
-    if targets.len() > 0 {
-        info!("Killplane: {} targent", targets.len());
-    }
     if killplanes.iter().any(|f| targets.contains(f)) {
         kill_player.write(EKillPlayer);
         info!("Player died.");

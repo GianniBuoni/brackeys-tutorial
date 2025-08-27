@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=4 uid="uid://cho2c1hcbf321"]
+[gd_scene load_steps=15 format=4 uid="uid://cho2c1hcbf321"]
 
 [ext_resource type="PackedScene" uid="uid://cbqi3f1mnjg8q" path="res://scenes/ui/hud.tscn" id="1_i2aat"]
 [ext_resource type="TileSet" uid="uid://j4ubvjqv4yt8" path="res://resources/tilemap.tres" id="1_m802k"]
@@ -6,9 +6,86 @@
 [ext_resource type="PackedScene" uid="uid://dpwvvi68kirm6" path="res://scenes/entities/kill_plane_node.tscn" id="4_qdh5e"]
 [ext_resource type="PackedScene" uid="uid://1nctnweq65un" path="res://scenes/entities/platform.tscn" id="4_uvc87"]
 [ext_resource type="PackedScene" uid="uid://cdxu3mj2fcoit" path="res://scenes/entities/enemy.tscn" id="6_50wog"]
+[ext_resource type="PackedScene" uid="uid://xjyfomuum0fw" path="res://scenes/entities/coin.tscn" id="7_1ey3t"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_50wog"]
 distance = -296.0
+
+[sub_resource type="Animation" id="Animation_1ey3t"]
+resource_name = "move"
+length = 3.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(176, 104), Vector2(432, 104)]
+}
+
+[sub_resource type="Animation" id="Animation_t0hvh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(176, 104)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kfebt"]
+_data = {
+&"RESET": SubResource("Animation_t0hvh"),
+&"move": SubResource("Animation_1ey3t")
+}
+
+[sub_resource type="Animation" id="Animation_r72dd"]
+resource_name = "move"
+length = 1.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(320, 16), Vector2(224, 16)]
+}
+
+[sub_resource type="Animation" id="Animation_ijn0p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(320, 16)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jmes4"]
+_data = {
+&"RESET": SubResource("Animation_ijn0p"),
+&"move": SubResource("Animation_r72dd")
+}
 
 [node name="Level01" type="Node2D"]
 
@@ -45,6 +122,21 @@ shape = SubResource("WorldBoundaryShape2D_50wog")
 [node name="Platform" parent="Platforms" instance=ExtResource("4_uvc87")]
 position = Vector2(176, 104)
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Platforms/Platform"]
+libraries = {
+&"": SubResource("AnimationLibrary_kfebt")
+}
+autoplay = "move"
+
+[node name="Platform3" parent="Platforms" instance=ExtResource("4_uvc87")]
+position = Vector2(320, 16)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Platforms/Platform3"]
+libraries = {
+&"": SubResource("AnimationLibrary_jmes4")
+}
+autoplay = "move"
+
 [node name="Platform2" parent="Platforms" instance=ExtResource("4_uvc87")]
 position = Vector2(480, 72)
 
@@ -61,3 +153,29 @@ position = Vector2(176, -16)
 
 [node name="Enemy5" parent="Enemies" instance=ExtResource("6_50wog")]
 position = Vector2(48, -16)
+
+[node name="Coins" type="Node2D" parent="."]
+
+[node name="Coin" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(168, 72)
+
+[node name="Coin7" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(408, 8)
+
+[node name="Coin8" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(600, 88)
+
+[node name="Coin2" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(360, 120)
+
+[node name="Coin3" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(136, -72)
+
+[node name="Coin4" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(-8, -72)
+
+[node name="Coin5" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(8, -72)
+
+[node name="Coin6" parent="Coins" instance=ExtResource("7_1ey3t")]
+position = Vector2(24, -72)

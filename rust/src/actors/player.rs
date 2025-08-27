@@ -146,14 +146,15 @@ fn set_animation(
             .ok_or(NodeError::not_found("Player", path))?;
 
         movement_events.read().for_each(|f| {
-            sprite.set_flip_h(f.facing_left);
             if !f.grounded {
                 sprite.play_ex().name("jump").done();
+                sprite.set_flip_h(f.facing_left);
                 return;
             }
             match f.is_moving {
                 true => {
                     sprite.play_ex().name("run").done();
+                    sprite.set_flip_h(f.facing_left);
                 }
                 false => sprite.play_ex().name("idle").done(),
             }
