@@ -1,7 +1,4 @@
-use godot::classes::{
-    AnimationPlayer, Area2D,
-    class_macros::sys::godot_virtual_consts::AnimatedSprite2D,
-};
+use godot::classes::{AnimationPlayer, Area2D};
 
 use super::*;
 

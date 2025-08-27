@@ -58,16 +58,15 @@ impl Plugin for PlayerControllerPlugin {
 
 #[main_thread_system]
 fn detect_input(
-    mut player: Query<
-        &mut GodotNodeHandle,
+    player: Single<
+        &GodotNodeHandle,
         (With<CharacterBody2DMarker>, With<Player>),
     >,
     mut input_events: EventWriter<EPlayerInput>,
 ) {
-    // if there is no player node, then no input events are recorded
-    let Ok(_) = player.single_mut() else {
-        return;
-    };
+    // Single query is used to skip this system when
+    // no player is presesnt
+    let _ = player.into_inner();
     let input = Input::singleton();
     let move_dir = input.get_axis("move_left", "move_right");
     let jump_pressed = input.is_action_just_pressed("jump");
@@ -80,7 +79,7 @@ fn detect_input(
 
 #[main_thread_system]
 fn set_movement(
-    mut player: Query<
+    player: Single<
         (&mut GodotNodeHandle, &Speed, &JumpVelocity),
         (With<CharacterBody2DMarker>, With<Player>),
     >,
@@ -88,9 +87,7 @@ fn set_movement(
     mut movement_events: EventWriter<EPlayerMovement>,
     physics_delta: Res<PhysicsDelta>,
 ) {
-    let Ok((mut handle, speed, jump_velocity)) = player.single_mut() else {
-        return;
-    };
+    let (mut handle, speed, jump_velocity) = player.into_inner();
     let mut char_body = handle.get::<CharacterBody2D>();
 
     let mut velocity = char_body.get_velocity();
@@ -131,7 +128,7 @@ fn set_movement(
 
 #[main_thread_system]
 fn set_animation(
-    mut player: Query<
+    player: Single<
         &mut GodotNodeHandle,
         (With<CharacterBody2DMarker>, With<Player>),
     >,
@@ -140,25 +137,25 @@ fn set_animation(
     let path = "AnimatedSprite2D";
     let _ = (|| {
         let mut sprite = player
-            .single_mut()?
+            .into_inner()
             .get::<CharacterBody2D>()
             .try_get_node_as::<AnimatedSprite2D>(path)
             .ok_or(NodeError::not_found("Player", path))?;
 
-        movement_events.read().for_each(|f| {
-            if !f.grounded {
-                sprite.play_ex().name("jump").done();
-                sprite.set_flip_h(f.facing_left);
-                return;
-            }
-            match f.is_moving {
-                true => {
+        movement_events
+            .read()
+            .for_each(|f| match (f.grounded, f.is_moving) {
+                (false, false) => sprite.play_ex().name("jump").done(),
+                (false, true) => {
+                    sprite.play_ex().name("jump").done();
+                    sprite.set_flip_h(f.facing_left);
+                }
+                (true, true) => {
                     sprite.play_ex().name("run").done();
                     sprite.set_flip_h(f.facing_left);
                 }
-                false => sprite.play_ex().name("idle").done(),
-            }
-        });
+                (true, false) => sprite.play_ex().name("idle").done(),
+            });
         Aok(())
     })()
     .map_err(|e| error_once!("{e}"));
@@ -166,18 +163,18 @@ fn set_animation(
 
 #[main_thread_system]
 fn kill(
-    mut player: Query<
+    player: Single<
         &mut GodotNodeHandle,
         (With<CharacterBody2DMarker>, With<Player>),
     >,
     mut kill_player: EventReader<EKillPlayer>,
 ) {
+    let mut player = player.into_inner();
     let _ = kill_player
         .read()
         .try_for_each(|_| {
             let path = "CollisionShape2D";
             let mut collider = player
-                .single_mut()?
                 .get::<CharacterBody2D>()
                 .try_get_node_as::<CollisionShape2D>(path)
                 .ok_or(NodeError::not_found("Player", path))?;
