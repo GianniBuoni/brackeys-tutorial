@@ -25,7 +25,7 @@ BevyAppSingleton="*res://scenes/bevy_app_singleton.tscn"
 
 [dialogue_manager]
 
-runtime/balloon_path="res://scenes/balloon.tscn"
+runtime/balloon_path="res://scenes/ui/balloon.tscn"
 
 [display]
 
