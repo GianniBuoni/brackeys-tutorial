@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://cho2c1hcbf321"]
+[gd_scene load_steps=18 format=4 uid="uid://cho2c1hcbf321"]
 
 [ext_resource type="PackedScene" uid="uid://cbqi3f1mnjg8q" path="res://scenes/ui/hud.tscn" id="1_i2aat"]
 [ext_resource type="TileSet" uid="uid://j4ubvjqv4yt8" path="res://resources/tilemap.tres" id="1_m802k"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://1nctnweq65un" path="res://scenes/entities/platform.tscn" id="4_uvc87"]
 [ext_resource type="PackedScene" uid="uid://cdxu3mj2fcoit" path="res://scenes/entities/enemy.tscn" id="6_50wog"]
 [ext_resource type="PackedScene" uid="uid://xjyfomuum0fw" path="res://scenes/entities/coin.tscn" id="7_1ey3t"]
+[ext_resource type="Script" uid="uid://bf6rd4vpihux" path="res://scenes/ui/dialog_marker.gd" id="8_t0hvh"]
+[ext_resource type="Resource" uid="uid://dthbf45tow6sy" path="res://assets/dialog/restart.dialogue" id="9_kfebt"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_50wog"]
 distance = -296.0
@@ -86,6 +88,9 @@ _data = {
 &"RESET": SubResource("Animation_ijn0p"),
 &"move": SubResource("Animation_r72dd")
 }
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1ey3t"]
+size = Vector2(16, 16)
 
 [node name="Level01" type="Node2D"]
 
@@ -179,3 +184,14 @@ position = Vector2(8, -72)
 
 [node name="Coin6" parent="Coins" instance=ExtResource("7_1ey3t")]
 position = Vector2(24, -72)
+
+[node name="DialogMarkerNode" type="DialogMarkerNode" parent="."]
+collision_mask = 2
+script = ExtResource("8_t0hvh")
+dialog_resource = ExtResource("9_kfebt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DialogMarkerNode"]
+position = Vector2(616, 88)
+shape = SubResource("RectangleShape2D_1ey3t")
+
+[connection signal="trigger_dialog" from="DialogMarkerNode" to="DialogMarkerNode" method="_on_trigger_dialog"]

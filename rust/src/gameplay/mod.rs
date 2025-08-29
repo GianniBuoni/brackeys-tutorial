@@ -4,6 +4,7 @@ use godot_bevy::prelude::*;
 
 use crate::prelude::*;
 
+mod dialog_markers;
 mod hud;
 mod killplane;
 mod pickup;
@@ -17,6 +18,7 @@ pub fn plugin(app: &mut App) {
     app.add_plugins(hud::HudPlugin);
     app.add_plugins(killplane::KillplanePlugin);
     app.add_plugins(pickup::PickupPlugin);
+    app.add_plugins(dialog_markers::DialogMarkerPlugin);
     app.add_systems(OnEnter(GameState::Reloading), reset_scene);
 }
 
